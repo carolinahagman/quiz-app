@@ -1,0 +1,8 @@
+{
+  "name": "Quiz App",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react",
+  "id": "cdcb9a5f"
+}
