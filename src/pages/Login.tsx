@@ -57,9 +57,10 @@ const Login: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader></IonHeader>
-      <IonContent fullscreen>
+      <IonHeader>
         <LogoContainer />
+      </IonHeader>
+      <IonContent fullscreen>
         <IonCard className="form">
           <IonItem lines="none">
             <IonLabel position="floating" color="secondary">
@@ -81,12 +82,21 @@ const Login: React.FC = () => {
             ></IonInput>
           </IonItem>
           <IonButton onClick={loginUser}>Log in</IonButton>
-          <p>
-            Don’t have an account?
-            <Link id="loginlink" to="/register">
+          <div className="flex create-account-container">
+            <p>
+              Don’t have an account?
+              {/* <Link id="loginlink" to="/register">
               Create one here
-            </Link>
-          </p>
+            </Link> */}
+            </p>{" "}
+            <IonButton
+              className="create-account-button"
+              fill="clear"
+              color="dark"
+            >
+              <strong>Create one here</strong>
+            </IonButton>
+          </div>
         </IonCard>
       </IonContent>
     </IonPage>
