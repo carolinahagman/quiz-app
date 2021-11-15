@@ -14,19 +14,21 @@ import {
 } from "@ionic/react";
 import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import "./global.css";
-
 import "./Register.css";
-
 import LogoContainer from "../components/Logocontainer";
+import { UsersApi } from "../communication";
+import { PostUserRequest } from "../communication/models";
 
 const Register: React.FC = () => {
+  const usersApi = new UsersApi();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [present, dismiss] = useIonToast();
+  const history = useHistory();
 
   function createUser() {
     if (password.length < 6) {
@@ -63,22 +65,28 @@ const Register: React.FC = () => {
     }
 
     console.log(username, email, password, confirmPassword);
-    //http://159.223.0.160/swagger/index.html
-    axios
-      .post("", {
-        username: username,
-        email: email,
-        password: password,
-      })
-      .then(
-        (response) => {
-          console.log(response);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    const body: PostUserRequest = {
+      username,
+      email,
+      password,
+    };
+    usersApi.usersPost(body).then(
+      (response) => {
+        console.log(response);
+        history.push("/login");
+      },
+      (error) => {
+        present({
+          buttons: [],
+          message: "username or email already exists",
+          color: "danger",
+          cssClass: "toast-danger",
+          duration: 2000,
+        });
+      }
+    );
   }
+
   return (
     <IonPage>
       <IonHeader>
