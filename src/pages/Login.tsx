@@ -30,8 +30,8 @@ import { BASE_PATH } from "../communication/base";
 
 const Login: React.FC = () => {
   const api = new AuthenticationApi();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [present, dismiss] = useIonToast();
   const history = useHistory();
 
@@ -64,11 +64,11 @@ const Login: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader className="ion-no-border">
         <LogoContainer />
       </IonHeader>
       <IonContent fullscreen>
-        <IonCard className="form">
+        <IonCard className="form ">
           <IonItem lines="none">
             <IonLabel position="floating" color="secondary">
               username
@@ -88,16 +88,21 @@ const Login: React.FC = () => {
               onIonChange={(e: any) => setPassword(e.target.value)}
             ></IonInput>
           </IonItem>
-          <IonButton onClick={loginUser}>Log in</IonButton>
-          <div className=" flex create-account-container">
-            <p className="dark">Don’t have an account?</p>{" "}
+          <IonButton
+            className="primary-button login-register-button"
+            onClick={loginUser}
+          >
+            Log in
+          </IonButton>
+          <div className="flex create-account-container">
+            <p className="secondary">Don’t have an account?</p>
             <Link to="/register">
               <IonButton
                 className="create-account-button"
                 fill="clear"
                 color="dark"
               >
-                <strong>Create one here</strong>
+                <p className="button-text">Create one here</p>
               </IonButton>
             </Link>
           </div>

@@ -23,10 +23,10 @@ import { PostUserRequest } from "../communication/models";
 
 const Register: React.FC = () => {
   const usersApi = new UsersApi();
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [present, dismiss] = useIonToast();
   const history = useHistory();
 
@@ -89,20 +89,24 @@ const Register: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader className="ion-no-border">
         <LogoContainer />
       </IonHeader>
       <IonContent fullscreen>
         <IonCard className="form">
           <IonItem lines="none">
-            <IonLabel position="floating">username</IonLabel>{" "}
+            <IonLabel color="secondary" position="floating">
+              username
+            </IonLabel>{" "}
             <IonInput
               className="input-border"
               onIonChange={(e: any) => setUsername(e.target.value)}
             ></IonInput>
           </IonItem>
           <IonItem lines="none">
-            <IonLabel position="floating">email</IonLabel>
+            <IonLabel color="secondary" position="floating">
+              email
+            </IonLabel>
             <IonInput
               className="input-border"
               type="email"
@@ -110,7 +114,9 @@ const Register: React.FC = () => {
             ></IonInput>
           </IonItem>
           <IonItem lines="none">
-            <IonLabel position="floating">password</IonLabel>
+            <IonLabel color="secondary" position="floating">
+              password
+            </IonLabel>
             <IonInput
               className="input-border"
               type="password"
@@ -118,19 +124,26 @@ const Register: React.FC = () => {
             ></IonInput>
           </IonItem>
           <IonItem lines="none">
-            <IonLabel position="floating">confirm password</IonLabel>
+            <IonLabel color="secondary" position="floating">
+              confirm password
+            </IonLabel>
             <IonInput
               className="input-border"
               type="password"
               onIonChange={(e: any) => setConfirmPassword(e.target.value)}
             ></IonInput>
           </IonItem>
-          <IonButton onClick={createUser}>Create account</IonButton>
+          <IonButton
+            className="primary-button login-register-button"
+            onClick={createUser}
+          >
+            Create account
+          </IonButton>
           <div className=" flex login-container">
-            <p className="dark"> Already have an account? </p>{" "}
+            <p className="secondary"> Already have an account? </p>{" "}
             <Link to="/login">
               <IonButton className="login-button" fill="clear" color="dark">
-                <strong>Login here</strong>
+                <p className="button-text">Login here</p>
               </IonButton>
             </Link>
           </div>

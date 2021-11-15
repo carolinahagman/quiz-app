@@ -10,7 +10,7 @@ import { IonReactRouter } from "@ionic/react-router";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-
+import Settings from "./pages/Settings";
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -48,6 +48,9 @@ class App extends React.Component<{}, {}> {
             </Route>
             <Route exact path="/register">
               <Register />
+            </Route>
+            <Route exact path="/settings">
+              <Settings />
             </Route>
             <Route exact path="/">
               <Redirect to={"/login"} />

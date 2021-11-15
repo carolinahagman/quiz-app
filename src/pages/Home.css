@@ -1,0 +1,39 @@
+.toolbar-container {
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 1rem;
+}
+
+.add-friend-search {
+  margin: 2rem 2rem 4rem 2rem;
+}
+
+.challenge-friend-search {
+  margin: 2rem 2rem 0.5rem 2rem;
+}
+
+.searchbar {
+  border-radius: 30px;
+  margin-top: 0.5rem;
+}
+
+.friend-list {
+  margin: 0 15px;
+}
+
+.friend-card {
+  height: 50px;
+  padding: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.friend-card div {
+  align-items: center;
+}
+
+.settings-button {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+}

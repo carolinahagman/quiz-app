@@ -11,3 +11,14 @@
 .input-border {
   border-bottom: 1px solid var(--ion-color-secondary);
 }
+
+.button-text {
+  text-transform: none;
+  text-align: start;
+  letter-spacing: 0;
+  font-size: 1rem;
+}
+
+.login-register-button {
+  margin: 2rem;
+}
