@@ -42,7 +42,7 @@ const Home: React.FC = () => {
         <IonHeader>
           <IonToolbar>
             <IonTitle size="large">
-              {(user && user.username) || "No username"}
+              {(user && user.username) || "LOADING"}
             </IonTitle>
           </IonToolbar>
         </IonHeader>

@@ -1,5 +1,13 @@
-#registerlink {
-  color: black;
-  text-decoration: none;
-  font-weight: bold;
+.login-button {
+  height: 100%;
+  font-size: 1rem;
+  text-align: start;
+}
+.login-container {
+  height: 50px;
+  align-items: center;
+  margin: 0 5px;
+}
+.input-border {
+  border-bottom: 1px solid var(--ion-color-secondary);
 }

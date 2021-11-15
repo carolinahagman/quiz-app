@@ -4,8 +4,11 @@
   flex-direction: column;
   width: 100%;
   align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--ion-color-dark);
 }
 
 .logo {
-  width: 364px;
+  width: 350px;
 }

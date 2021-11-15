@@ -14,18 +14,19 @@ import {
   IonCard,
   useIonToast,
 } from "@ionic/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 import axios, { Axios } from "axios";
 import { registerRoute } from "workbox-routing";
 import LogoContainer from "../components/Logocontainer";
-
+import "./global.css";
 import "./Login.css";
 import { AuthenticationApi } from "../communication";
 import { PostLoginRequest, PostLoginResponse } from "../communication/models";
-import { checkIfLoggedIn } from "../App";
+
 import { useHistory } from "react-router-dom";
+import { BASE_PATH } from "../communication/base";
 
 const Login: React.FC = () => {
   const api = new AuthenticationApi();
@@ -33,6 +34,12 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [present, dismiss] = useIonToast();
   const history = useHistory();
+
+  // useEffect(() => {
+  //   checkIfLoggedIn().then(() => {
+  //     history.push("/home");
+  //   });
+  // }, []);
 
   function loginUser() {
     const body: PostLoginRequest = {
@@ -82,21 +89,31 @@ const Login: React.FC = () => {
             ></IonInput>
           </IonItem>
           <IonButton onClick={loginUser}>Log in</IonButton>
-          <div className="flex create-account-container">
-            <p>Don’t have an account?</p>{" "}
-            <IonButton
-              href="/register"
-              className="create-account-button"
-              fill="clear"
-              color="dark"
-            >
-              <strong>Create one here</strong>
-            </IonButton>
+          <div className=" flex create-account-container">
+            <p className="dark">Don’t have an account?</p>{" "}
+            <Link to="/register">
+              <IonButton
+                className="create-account-button"
+                fill="clear"
+                color="dark"
+              >
+                <strong>Create one here</strong>
+              </IonButton>
+            </Link>
           </div>
         </IonCard>
       </IonContent>
     </IonPage>
   );
 };
+
+export async function checkIfLoggedIn(): Promise<boolean> {
+  try {
+    await axios.get(`${BASE_PATH}/Authentication`);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 
 export default Login;

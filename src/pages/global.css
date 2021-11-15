@@ -1,0 +1,20 @@
+.form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  border-radius: 20px;
+}
+
+.flex {
+  display: flex;
+}
+
+.toast-danger {
+  color: var(--ion-color-light);
+}
+
+.dark {
+  color: var(--ion-color-dark);
+}

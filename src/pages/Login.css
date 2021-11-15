@@ -13,10 +13,13 @@
 
 .create-account-button {
   height: 100%;
+  font-size: 1rem;
+  text-align: start;
 }
 .create-account-container {
   height: 50px;
   align-items: center;
+  margin: 0 5px;
 }
 .input-border {
   border-bottom: 1px solid var(--ion-color-secondary);

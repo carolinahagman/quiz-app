@@ -32,24 +32,9 @@ import "./theme/variables.css";
 import { useState } from "react";
 import React from "react";
 import axios from "axios";
+import { BASE_PATH } from "./communication/base";
 
-interface appState {
-  isLoggedIn: boolean;
-}
-
-class App extends React.Component<{}, appState> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      isLoggedIn: false,
-    } as appState;
-  }
-  async componentDidMount() {
-    const isLoggedIn = await checkIfLoggedIn();
-    console.log(isLoggedIn);
-    this.setState({ ...this.state, isLoggedIn });
-  }
-
+class App extends React.Component<{}, {}> {
   render() {
     return (
       <IonApp>
@@ -65,7 +50,7 @@ class App extends React.Component<{}, appState> {
               <Register />
             </Route>
             <Route exact path="/">
-              <Redirect to={this.state.isLoggedIn ? "/home" : "/login"} />
+              <Redirect to={"/login"} />
             </Route>
           </IonRouterOutlet>
         </IonReactRouter>
@@ -75,9 +60,3 @@ class App extends React.Component<{}, appState> {
 }
 
 export default App;
-export function checkIfLoggedIn(): Promise<boolean> {
-  return axios
-    .get("http://159.223.0.160/Authentication")
-    .then(() => true)
-    .catch(() => false);
-}
