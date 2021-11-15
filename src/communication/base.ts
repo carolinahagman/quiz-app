@@ -15,9 +15,11 @@ import { Configuration } from "./configuration";
 // Some imports not used depending on template conditions
 // @ts-ignore
 import globalAxios, { AxiosPromise, AxiosInstance } from "axios";
+import axios from "axios";
 
-export const BASE_PATH = "/".replace(/\/+$/, "http://159.223.0.160");
-
+export const BASE_PATH = "/".replace(/\/+$/, "https://localhost:5001");
+axios.defaults.withCredentials = true;
+globalAxios.defaults.withCredentials = true;
 /**
  *
  * @export

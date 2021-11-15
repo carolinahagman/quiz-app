@@ -12,47 +12,47 @@ import {
   IonImg,
   IonList,
   IonCard,
+  useIonToast,
 } from "@ionic/react";
 import { useState } from "react";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import axios, { Axios } from "axios";
 import { registerRoute } from "workbox-routing";
 import LogoContainer from "../components/Logocontainer";
 
 import "./Login.css";
 import { AuthenticationApi } from "../communication";
-import { PostLoginRequest } from "../communication/models";
+import { PostLoginRequest, PostLoginResponse } from "../communication/models";
+import { checkIfLoggedIn } from "../App";
+import { useHistory } from "react-router-dom";
 
 const Login: React.FC = () => {
   const api = new AuthenticationApi();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [present, dismiss] = useIonToast();
+  const history = useHistory();
 
   function loginUser() {
-    console.log(username, password);
-
     const body: PostLoginRequest = {
       username,
       password,
     };
-
-    //http://159.223.0.160/swagger/index.html
-    // axios
-    //   .post<PostLoginResponse>(
-    //     "http://159.223.0.160/Authentication/Login",
-    //     body
-    //   )
-    //   .then(
-    //     (response) => {
-    //       console.log(response);
-    //     },
-    //     (error) => {
-    //       console.log(error);
-    //     }
-    //   );
-
-    api.authenticationLoginPost(body);
+    api.authenticationLoginPost(body).then(
+      (response) => {
+        history.push("/home");
+      },
+      (error) => {
+        present({
+          buttons: [],
+          message: "Login failed, wrong username or password",
+          color: "danger",
+          cssClass: "toast-danger",
+          duration: 2000,
+        });
+      }
+    );
   }
 
   return (
@@ -83,13 +83,9 @@ const Login: React.FC = () => {
           </IonItem>
           <IonButton onClick={loginUser}>Log in</IonButton>
           <div className="flex create-account-container">
-            <p>
-              Don’t have an account?
-              {/* <Link id="loginlink" to="/register">
-              Create one here
-            </Link> */}
-            </p>{" "}
+            <p>Don’t have an account?</p>{" "}
             <IonButton
+              href="/register"
               className="create-account-button"
               fill="clear"
               color="dark"
