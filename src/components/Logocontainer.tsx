@@ -7,7 +7,7 @@ interface ContainerProps {}
 const LogoContainer: React.FC<ContainerProps> = () => {
   return (
     <div className="container">
-      <IonImg className="logo" src={Logo} />
+      <IonImg className="logo" src={Logo} alt="quiz logo" />
       <IonTitle size="small">Challenge your friends!</IonTitle>
     </div>
   );

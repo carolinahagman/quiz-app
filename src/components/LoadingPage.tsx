@@ -7,7 +7,7 @@ interface ContainerProps {}
 const LoadingPage: React.FC<ContainerProps> = () => {
   return (
     <div className="loading-container">
-      <IonImg className="loading" src={loading} />
+      <IonImg className="loading" src={loading} alt="animated Q loading" />
     </div>
   );
 };

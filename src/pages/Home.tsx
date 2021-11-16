@@ -17,12 +17,15 @@ import { useEffect, useState } from "react";
 import { AuthenticationApi, ContactsApi, UsersApi } from "../communication";
 import { FriendModel, GetUserResponse } from "../communication/models";
 import Logo from "../assets/QuizLogo.png";
+import defaultAvatar from "../assets/avatar/Avatar.png";
+
 import LoadingPage from "../components/LoadingPage";
 
 import "./Home.css";
 import "./global.css";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
+import { send } from "process";
 
 const Home: React.FC = () => {
   const authApi = new AuthenticationApi();
@@ -102,6 +105,14 @@ const Home: React.FC = () => {
     });
   }
 
+  function sendFriendRequest() {
+    console.log("Friendrequest sent!");
+  }
+
+  function startGame() {
+    console.log("Game started!");
+  }
+
   return (
     <IonPage>
       {isLoading ? (
@@ -129,11 +140,25 @@ const Home: React.FC = () => {
               onIonChange={(e: any) => setAddFriendSearch(e.detail.value)}
             ></IonSearchbar>
             {addFriendSearch ? (
-              <IonItem lines="none">
+              <IonList className="friend-list">
                 {friendSearchResults.map((friend) => (
-                  <p>{friend.username}</p>
+                  <IonCard className="friend-card flex">
+                    <div className="flex">
+                      <IonAvatar className="small-avatar">
+                        <IonImg className="avatar" src={defaultAvatar} />
+                      </IonAvatar>
+                      <p className="secondary">{friend.username}</p>
+                    </div>{" "}
+                    <IonButton
+                      onClick={sendFriendRequest}
+                      fill="clear"
+                      color="dark"
+                    >
+                      Add
+                    </IonButton>
+                  </IonCard>
                 ))}
-              </IonItem>
+              </IonList>
             ) : null}
           </div>
 
@@ -156,15 +181,12 @@ const Home: React.FC = () => {
               .map((friend) => (
                 <IonCard className="friend-card flex">
                   <div className="flex">
-                    <IonCard className="small-avatar">
-                      <IonImg
-                        className="avatar"
-                        src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
-                      />
-                    </IonCard>
-                    <p>{friend.username}</p>
+                    <IonAvatar className="small-avatar">
+                      <IonImg className="avatar" src={defaultAvatar} />
+                    </IonAvatar>
+                    <p className="secondary">{friend.username}</p>
                   </div>{" "}
-                  <IonButton fill="clear" color="dark">
+                  <IonButton onClick={startGame} fill="clear" color="dark">
                     Play
                   </IonButton>
                 </IonCard>

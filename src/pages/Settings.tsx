@@ -13,6 +13,7 @@ import {
   useIonToast,
   IonImg,
   useIonAlert,
+  IonAvatar,
 } from "@ionic/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -21,21 +22,28 @@ import "./global.css";
 import "./Settings.css";
 import LogoContainer from "../components/Logocontainer";
 import { UsersApi } from "../communication";
-import { PostUserRequest } from "../communication/models";
+import { PostUserRequest, PutUserRequest } from "../communication/models";
 import Logo from "../assets/QuizLogo.png";
 import defaultAvatar from "../assets/avatar/Avatar.png";
 
 const Settings: React.FC = () => {
   const usersApi = new UsersApi();
   const history = useHistory();
-  const [user, setUser] = useState<object>(null);
+  const [user, setUser] = useState(null);
   const [email, setEmail] = useState<string>("email@email.com");
   const [avatar, setAvatar] = useState<string>(defaultAvatar);
-  const [oldpassword, setOldPassword] = useState<string>("");
-  const [newPassword, setNewPassword] = useState<string>("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState<string>("");
+  const [oldPassword, setOldPassword] = useState<string>(null);
+  const [newPassword, setNewPassword] = useState<string>(null);
+  const [confirmNewPassword, setConfirmNewPassword] = useState<string>(null);
   const [present, dismiss] = useIonToast();
   const [alert] = useIonAlert();
+
+  useEffect(() => {
+    usersApi.usersGet().then((response) => {
+      setUser(response.data);
+      setEmail(user.email);
+    });
+  }, []);
 
   function updateUser() {
     console.log("user updated");
@@ -48,7 +56,7 @@ const Settings: React.FC = () => {
         cssClass: "toast-danger",
         duration: 2000,
       });
-      return;
+      setEmail(user.email);
     }
 
     if (newPassword != confirmNewPassword) {
@@ -59,8 +67,31 @@ const Settings: React.FC = () => {
         cssClass: "toast-danger",
         duration: 2000,
       });
+      setNewPassword(null);
+      setConfirmNewPassword(null);
+
       return;
     }
+
+    if (newPassword.length < 6) {
+      present({
+        buttons: [],
+        message: "password needs to be at least 6 characters",
+        color: "danger",
+        cssClass: "toast-danger",
+        duration: 2000,
+      });
+    }
+    const body: PutUserRequest = {
+      username: user.username,
+      email: email,
+      avatar: avatar,
+      oldPassword: oldPassword,
+      password: newPassword,
+    };
+    usersApi.usersPut(body).then((response) => {
+      console.log(response.data);
+    });
   }
 
   function deleteUser() {
@@ -104,9 +135,9 @@ const Settings: React.FC = () => {
         <IonImg className="small-logo" src={Logo} />
       </IonToolbar>
       <IonCard className="form settings-card">
-        <IonCard className="big-avatar">
+        <IonAvatar className="big-avatar">
           <IonImg className="avatar" src={avatar} />
-        </IonCard>
+        </IonAvatar>
 
         <IonItem lines="none">
           <IonLabel color="secondary" position="floating">
