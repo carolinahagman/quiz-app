@@ -11,6 +11,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Settings from "./pages/Settings";
+import Game from "./pages/Game";
+
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -51,6 +53,9 @@ class App extends React.Component<{}, {}> {
             </Route>
             <Route exact path="/settings">
               <Settings />
+            </Route>
+            <Route exact path="/game">
+              <Game />
             </Route>
             <Route exact path="/">
               <Redirect to={"/login"} />

@@ -1,7 +1,3 @@
-.settings-card {
-  padding: 3rem;
-}
-
 .settings-card img {
   margin-bottom: 2rem;
 }
@@ -9,12 +5,6 @@
 .button-container {
   margin: 2rem 0;
   display: flex;
-}
-
-.toolbar-container {
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 1rem;
 }
 
 .settings-button {

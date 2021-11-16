@@ -5,32 +5,38 @@ import {
   IonContent,
   IonHeader,
   IonImg,
-  IonItem,
   IonList,
   IonPage,
   IonSearchbar,
-  IonTitle,
   IonToolbar,
   useIonToast,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
-import { AuthenticationApi, ContactsApi, UsersApi } from "../communication";
-import { FriendModel, GetUserResponse } from "../communication/models";
+import {
+  AuthenticationApi,
+  ContactsApi,
+  GamesApi,
+  UsersApi,
+} from "../communication";
+import {
+  FriendModel,
+  GetUserResponse,
+  PostFriendRequest,
+  PostGameRequest,
+} from "../communication/models";
 import Logo from "../assets/QuizLogo.png";
 import defaultAvatar from "../assets/avatar/Avatar.png";
-
 import LoadingPage from "../components/LoadingPage";
-
 import "./Home.css";
 import "./global.css";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import { send } from "process";
 
 const Home: React.FC = () => {
   const authApi = new AuthenticationApi();
   const usersApi = new UsersApi();
   const contactsApi = new ContactsApi();
+  const gamesApi = new GamesApi();
   const history = useHistory();
   const [user, setUser] = useState<GetUserResponse>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -48,14 +54,6 @@ const Home: React.FC = () => {
       .usersGet()
       .then((response) => {
         setUser(response.data);
-        console.log(response.data);
-        present({
-          buttons: [],
-          message: "succesfully logged in",
-          color: "success",
-          cssClass: "toast-success",
-          duration: 2000,
-        });
       })
       .catch((error) => {
         present({
@@ -65,6 +63,7 @@ const Home: React.FC = () => {
           cssClass: "toast-danger",
           duration: 2000,
         });
+        history.push("/login");
       });
     const getFriendsRequest = contactsApi
       .contactsGet()
@@ -105,12 +104,43 @@ const Home: React.FC = () => {
     });
   }
 
-  function sendFriendRequest() {
-    console.log("Friendrequest sent!");
+  function sendFriendRequest(username) {
+    const body: PostFriendRequest = {
+      username,
+    };
+    contactsApi
+      .contactsPost(body)
+      .then(() => {
+        present({
+          buttons: [],
+          message: "Friend request sent!",
+          color: "success",
+          cssClass: "toast-success",
+          duration: 2000,
+        });
+      })
+      .catch(() => {
+        present({
+          buttons: [],
+          message: "You've already sent a request",
+          color: "danger",
+          cssClass: "toast-danger",
+          duration: 2000,
+        });
+      });
   }
+  //TODO: get friend requests
+  //TODO: get game challenge
 
-  function startGame() {
-    console.log("Game started!");
+  function startGame(username) {
+    const body: PostGameRequest = {
+      username,
+    };
+    console.log(`Game started with ${username}`);
+    // gamesApi
+    //   .gamesPost(body)
+    //   .then(() => {})
+    //   .catch(() => {});
   }
 
   return (
@@ -142,7 +172,7 @@ const Home: React.FC = () => {
             {addFriendSearch ? (
               <IonList className="friend-list">
                 {friendSearchResults.map((friend) => (
-                  <IonCard className="friend-card flex">
+                  <IonCard key={friend.username} className="friend-card flex">
                     <div className="flex">
                       <IonAvatar className="small-avatar">
                         <IonImg className="avatar" src={defaultAvatar} />
@@ -150,7 +180,9 @@ const Home: React.FC = () => {
                       <p className="secondary">{friend.username}</p>
                     </div>{" "}
                     <IonButton
-                      onClick={sendFriendRequest}
+                      onClick={() => {
+                        sendFriendRequest(friend.username);
+                      }}
                       fill="clear"
                       color="dark"
                     >
@@ -186,7 +218,13 @@ const Home: React.FC = () => {
                     </IonAvatar>
                     <p className="secondary">{friend.username}</p>
                   </div>{" "}
-                  <IonButton onClick={startGame} fill="clear" color="dark">
+                  <IonButton
+                    onClick={() => {
+                      startGame(friend.username);
+                    }}
+                    fill="clear"
+                    color="dark"
+                  >
                     Play
                   </IonButton>
                 </IonCard>

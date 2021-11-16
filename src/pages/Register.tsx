@@ -6,13 +6,9 @@ import {
   IonItem,
   IonLabel,
   IonPage,
-  IonTextarea,
-  IonTitle,
-  IonToolbar,
   IonCard,
   useIonToast,
 } from "@ionic/react";
-import axios from "axios";
 import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import "./global.css";
