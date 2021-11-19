@@ -15,6 +15,7 @@ import { useState } from "react";
 
 const Game: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
   return (
     <IonPage>
       {isLoading ? (

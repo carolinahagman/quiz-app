@@ -161,7 +161,7 @@ const Home: React.FC = () => {
               </div>
             </IonToolbar>
           </IonHeader>
-          <p>{user?.username ?? ""}</p>
+
           <div className="add-friend-search">
             <h2 className="title text-center">Add new friend</h2>
             <IonSearchbar
