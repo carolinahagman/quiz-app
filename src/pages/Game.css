@@ -32,3 +32,20 @@ small {
 .options-card {
   padding-left: 1rem;
 }
+.counter-container {
+  margin-top: 2rem;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ion-color-secondary);
+  border: 1px solid var(--ion-color-secondary);
+  height: 90px;
+  width: 90px;
+  border-radius: 100%;
+}

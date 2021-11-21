@@ -5,12 +5,12 @@
   padding: 1rem 2rem;
 }
 
-.friend-list {
+.result-list {
   margin: 0 10px;
   width: 100%;
 }
 
-.friend-card {
+.result-card {
   height: 50px;
   padding: 0.5rem;
   justify-content: space-between;

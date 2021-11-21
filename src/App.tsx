@@ -36,6 +36,7 @@ import { useState } from "react";
 import React from "react";
 import axios from "axios";
 import { BASE_PATH } from "./communication/base";
+import ReadyCheck from "./pages/ReadyCheck";
 
 class App extends React.Component<{}, {}> {
   render() {
@@ -52,15 +53,14 @@ class App extends React.Component<{}, {}> {
             <Route exact path="/register">
               <Register />
             </Route>
-            <Route exact path="/settings">
-              <Settings />
-            </Route>
+            <Route exact path="/settings" component={Settings}></Route>
             <Route exact path="/game">
               <Game />
             </Route>
             <Route exact path="/result">
               <Result />
             </Route>
+            <Route exact path="/ready-check" component={ReadyCheck}></Route>
             <Route exact path="/">
               <Redirect to={"/login"} />
             </Route>

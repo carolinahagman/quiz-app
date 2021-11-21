@@ -17,6 +17,7 @@ import { Configuration } from '../configuration';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 import { GeneralDto } from '../models';
+import { PostAnswerRequest } from '../models';
 import { PostGameRequest } from '../models';
 import { PostGameResponse } from '../models';
 /**
@@ -138,6 +139,56 @@ export const GamesApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
+         * @param {string} id 
+         * @param {string} questionId 
+         * @param {PostAnswerRequest} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        gamesIdQuestionQuestionIdPost: async (id: string, questionId: string, body?: PostAnswerRequest, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling gamesIdQuestionQuestionIdPost.');
+            }
+            // verify required parameter 'questionId' is not null or undefined
+            if (questionId === null || questionId === undefined) {
+                throw new RequiredError('questionId','Required parameter questionId was null or undefined when calling gamesIdQuestionQuestionIdPost.');
+            }
+            const localVarPath = `/Games/{id}/question/{questionId}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"questionId"}}`, encodeURIComponent(String(questionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                query.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {PostGameRequest} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -223,6 +274,21 @@ export const GamesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} id 
+         * @param {string} questionId 
+         * @param {PostAnswerRequest} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async gamesIdQuestionQuestionIdPost(id: string, questionId: string, body?: PostAnswerRequest, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await GamesApiAxiosParamCreator(configuration).gamesIdQuestionQuestionIdPost(id, questionId, body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @param {PostGameRequest} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -271,6 +337,17 @@ export const GamesApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
+         * @param {string} id 
+         * @param {string} questionId 
+         * @param {PostAnswerRequest} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        gamesIdQuestionQuestionIdPost(id: string, questionId: string, body?: PostAnswerRequest, options?: any): AxiosPromise<void> {
+            return GamesApiFp(configuration).gamesIdQuestionQuestionIdPost(id, questionId, body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {PostGameRequest} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -316,6 +393,18 @@ export class GamesApi extends BaseAPI {
      */
     public gamesIdQuestionGet(id: string, options?: any) {
         return GamesApiFp(this.configuration).gamesIdQuestionGet(id, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @param {string} id 
+     * @param {string} questionId 
+     * @param {PostAnswerRequest} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GamesApi
+     */
+    public gamesIdQuestionQuestionIdPost(id: string, questionId: string, body?: PostAnswerRequest, options?: any) {
+        return GamesApiFp(this.configuration).gamesIdQuestionQuestionIdPost(id, questionId, body, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 

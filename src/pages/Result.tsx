@@ -12,10 +12,10 @@ import {
 } from "@ionic/react";
 import "./global.css";
 import "./Result.css";
-
+import confetti from "canvas-confetti";
 import defaultAvatar from "../assets/avatar/Avatar.png";
 import Logo from "../assets/QuizLogo.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import LoadingPage from "../components/LoadingPage";
 
@@ -24,6 +24,15 @@ const Result: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [ifCorrect, setIfCorrect] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(false);
+  const [winner, setWinner] = useState<boolean>(null);
+
+  useEffect(() => {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
+  }, []);
 
   function playAgain() {
     console.log("play again");
@@ -58,8 +67,8 @@ const Result: React.FC = () => {
               <IonImg className="avatar" src={avatar} />
             </IonAvatar>
             <h3>You won!</h3>
-            <IonList className="friend-list">
-              <IonCard className="friend-card flex">
+            <IonList className="result-list">
+              <IonCard className="result-card flex">
                 <div className="flex">
                   <IonAvatar className="small-avatar">
                     <IonImg className="avatar" src={defaultAvatar} />
