@@ -41,7 +41,7 @@ interface AnswerDto {
   isCorrect: boolean;
 }
 const Game: React.FC = () => {
-  const [counter, setCounter] = useState<number>(30);
+  const [counter, setCounter] = useState<number>(null);
   const [connection, setConnection] = useState<HubConnection>(null);
   const [answer, setAnswer] = useState<string>(null);
   const [question, setQuestion] = useState<QuestionMessage>(null);
@@ -144,12 +144,11 @@ const Game: React.FC = () => {
           </IonToolbar>
           <IonContent className="game-container">
             <div className="question-card-container">
-              {" "}
               <p className="secondary">1/10</p>
               <IonCard className="question-card">
                 <p className="dark">{he.decode(question.question)}</p>
               </IonCard>
-              <small>Category:</small>
+              <small>Category:{he.decode(question.category)}</small>
             </div>
             <IonList className="options-list">
               {question.answers.map((answer) => {

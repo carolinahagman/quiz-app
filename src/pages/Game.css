@@ -23,6 +23,8 @@ small {
   justify-content: center;
   display: flex;
   align-items: center;
+  padding: 1rem;
+  text-align: center;
 }
 
 .options-list {

@@ -1,11 +1,21 @@
-import { IonButton, IonContent, IonPage, useIonToast } from "@ionic/react";
+import {
+  IonButton,
+  IonContent,
+  IonImg,
+  IonPage,
+  IonToolbar,
+  useIonToast,
+} from "@ionic/react";
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 import { GamesApi } from "../communication";
 import { HubConnectionBuilder, HubConnection } from "@microsoft/signalr";
 import Connection from "../components/Connection";
 import { GameProps } from "./Game";
+import Logo from "../assets/QuizLogo.png";
 
+import "./global.css";
+import "./ReadyCheck.css";
 export interface ReadyCheckProps {
   gameId: string;
   isPlayer1: boolean;
@@ -93,10 +103,23 @@ const ReadyCheck: React.FC = () => {
 
   return (
     <IonPage>
+      <IonToolbar color="background">
+        <div className="flex toolbar-container">
+          <IonImg className="small-logo" src={Logo} />
+        </div>
+      </IonToolbar>
       <IonContent>
-        <h1>Other player is {otherPlayerReady ? "Ready" : "Not ready"}</h1>
-        <h1>You are {isReady ? "Ready" : "Not ready"}</h1>
-        <IonButton onClick={onReady}>Ready</IonButton>
+        <div className="ready-check-container">
+          <p className="ready-text">
+            Other player is {otherPlayerReady ? "ready" : "not ready"}
+          </p>
+          <p className="ready-text">
+            You are {isReady ? "ready" : "not ready"}
+          </p>
+          <IonButton className="primary-button ready-button" onClick={onReady}>
+            Ready for the challenge
+          </IonButton>
+        </div>
       </IonContent>
     </IonPage>
   );
