@@ -18,6 +18,7 @@ import Logo from "../assets/QuizLogo.png";
 import { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import LoadingPage from "../components/LoadingPage";
+import { GamesApi } from "../communication";
 
 export interface ResultProps {
   gameId: string;
@@ -30,6 +31,9 @@ const Result: React.FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [winner, setWinner] = useState<boolean>(null);
   const history = useHistory();
+  const gameApi = new GamesApi();
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
     if (winner) {

@@ -45,10 +45,10 @@ class App extends React.Component<{}, {}> {
         <IonReactRouter>
           <IonRouterOutlet>
             <Route exact path="/home">
-              <Home />
+              <Home key={Date.now()} />
             </Route>
             <Route exact path="/login">
-              <Login />
+              <Login key={Date.now()} />
             </Route>
             <Route exact path="/register">
               <Register />

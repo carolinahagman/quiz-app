@@ -4,11 +4,13 @@ import {
   IonCard,
   IonContent,
   IonHeader,
+  IonIcon,
   IonImg,
   IonList,
   IonPage,
   IonSearchbar,
   IonToolbar,
+  useIonAlert,
   useIonToast,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
@@ -26,13 +28,15 @@ import {
   PostGameResponse,
 } from "../communication/models";
 import Logo from "../assets/QuizLogo.png";
+
 import defaultAvatar from "../assets/avatar/Avatar.png";
 import LoadingPage from "../components/LoadingPage";
 import "./Home.css";
 import "./global.css";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import { ReadyCheckProps } from "./ReadyCheck";
+import { closeOutline } from "ionicons/icons";
 import { HubConnectionBuilder, HubConnection } from "@microsoft/signalr";
 
 interface StartGameFriendModel {
@@ -54,7 +58,9 @@ const Home: React.FC = () => {
   const history = useHistory();
   const [user, setUser] = useState<GetUserResponse>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [present, dismiss] = useIonToast();
+  const [present] = useIonToast();
+  const [alert] = useIonAlert();
+
   const [currentGame, setCurrentGame] = useState<PostGameResponse>(null);
   const [addFriendSearch, setAddFriendSearch] = useState<string>("");
   const [friendSearchResults, setFriendSearchResults] = useState<FriendModel[]>(
@@ -62,6 +68,7 @@ const Home: React.FC = () => {
   );
   const [challengeFriendSearch, setChallengeFriendSearch] =
     useState<string>("");
+  const location = useLocation();
   const [friends, setFriends] = useState<FriendModel[]>([]);
   const [connection, setConnection] = useState<HubConnection>(null);
   useEffect(() => {
@@ -110,7 +117,6 @@ const Home: React.FC = () => {
       };
       console.log("CURRENT GAME");
       console.log(state);
-
       history.replace("/ready-check", state);
     }
   }, [currentGame, user]);
@@ -129,7 +135,8 @@ const Home: React.FC = () => {
           cssClass: "toast-danger",
           duration: 2000,
         });
-        history.push("/login");
+
+        history.replace("/login");
       });
     const getFriendsRequest = contactsApi
       .contactsGet()
@@ -166,13 +173,16 @@ const Home: React.FC = () => {
         cssClass: "toast-success",
         duration: 2000,
       });
-      history.push("/login");
+
+      history.push({ pathname: "/empty" });
+      history.replace({ pathname: "/login" });
     });
   }
 
-  function sendFriendRequest(username) {
+  function sendFriendRequest(friend: FriendModel) {
+    setAddFriendSearch("");
     const body: PostFriendRequest = {
-      username,
+      username: friend.username,
     };
     contactsApi
       .contactsPost(body)
@@ -184,6 +194,13 @@ const Home: React.FC = () => {
           cssClass: "toast-success",
           duration: 2000,
         });
+
+        const newFriend: FriendModel = {
+          username: friend.username,
+          avatar: friend.avatar,
+        };
+        const updatedFriends = friends.concat([newFriend]);
+        setFriends(updatedFriends);
       })
       .catch(() => {
         present({
@@ -196,6 +213,39 @@ const Home: React.FC = () => {
       });
   }
   //TODO: get friend requests
+  // useEffect(() => {
+  //   contactsApi.contactsFriendRequestsGet().then((response) => {
+
+  //   });
+  // }, [friends]);
+
+  const removeFriend = (username) => {
+    alert({
+      cssClass: "delete-alert",
+      header: "Remove friend",
+      message: `Do you want to remove ${username} as a friend? `,
+      buttons: [
+        {
+          text: "Delete",
+          role: "delete",
+          cssClass: "delete-alert",
+          handler: () => {
+            contactsApi.contactsUsernameDelete(username).then((response) => {
+              const updatedFriends = friends.filter(
+                (friend) => friend.username !== username
+              );
+              setFriends(updatedFriends);
+            });
+          },
+        },
+        {
+          text: "Cancel",
+          role: "cancel",
+          cssClass: "delete-alert",
+        },
+      ],
+    });
+  };
 
   async function startGame(username) {
     const body: PostGameRequest = {
@@ -233,6 +283,7 @@ const Home: React.FC = () => {
             <IonSearchbar
               className="searchbar"
               placeholder="username"
+              value={addFriendSearch}
               onIonChange={(e: any) => setAddFriendSearch(e.detail.value)}
             ></IonSearchbar>
             {addFriendSearch ? (
@@ -247,7 +298,7 @@ const Home: React.FC = () => {
                     </div>{" "}
                     <IonButton
                       onClick={() => {
-                        sendFriendRequest(friend.username);
+                        sendFriendRequest(friend);
                       }}
                       fill="clear"
                       color="dark"
@@ -284,15 +335,29 @@ const Home: React.FC = () => {
                     </IonAvatar>
                     <p className="secondary">{friend.username}</p>
                   </div>{" "}
-                  <IonButton
-                    onClick={() => {
-                      startGame(friend.username);
-                    }}
-                    fill="clear"
-                    color="dark"
-                  >
-                    Play
-                  </IonButton>
+                  <div>
+                    <IonButton
+                      onClick={() => {
+                        startGame(friend.username);
+                      }}
+                      fill="clear"
+                      color="dark"
+                    >
+                      Play
+                    </IonButton>
+                    <IonButton
+                      slot="end"
+                      onClick={() => {
+                        removeFriend(friend.username);
+                      }}
+                      size="small"
+                      className="icon"
+                      fill="clear"
+                      color="dark"
+                    >
+                      <IonIcon icon={closeOutline} />
+                    </IonButton>
+                  </div>
                 </IonCard>
               ))}
           </IonList>

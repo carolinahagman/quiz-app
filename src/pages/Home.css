@@ -30,3 +30,9 @@
   position: sticky;
   bottom: 5px;
 }
+
+.icon {
+  margin: 0px;
+  --padding-start: 2px;
+  --padding-end: 2px;
+}
