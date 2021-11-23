@@ -5,14 +5,15 @@ import {
   IonList,
   IonPage,
   IonToolbar,
+  useIonToast,
 } from "@ionic/react";
 import Logo from "../assets/QuizLogo.png";
 import "./global.css";
 import "./Game.css";
 import { HubConnectionBuilder, HubConnection } from "@microsoft/signalr";
 
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { useHistory, useLocation } from "react-router";
 import { GamesApi } from "../communication";
 import { PostAnswerRequest } from "../communication/models";
 import LoadingPage from "../components/LoadingPage";
@@ -31,9 +32,14 @@ interface ReadyForNextQuestionMessage {
 interface QuestionMessage {
   questionId: string;
   gameId: string;
+  questionNumber: number;
   question: string;
   category: string;
   answers: AnswerDto[];
+}
+
+interface InformDoneMessage {
+  gameId: string;
 }
 
 interface AnswerDto {
@@ -41,17 +47,20 @@ interface AnswerDto {
   isCorrect: boolean;
 }
 const Game: React.FC = () => {
-  const [counter, setCounter] = useState<number>(null);
+  const [counter, setCounter] = useState<number>(15);
   const [connection, setConnection] = useState<HubConnection>(null);
   const [answer, setAnswer] = useState<string>(null);
   const [question, setQuestion] = useState<QuestionMessage>(null);
   const [hasPlayer2Answered, setHasPlayer2Answered] = useState<boolean>(false);
   const location = useLocation();
+  const history = useHistory();
   const gameApi = new GamesApi();
+  const [present, dismiss] = useIonToast();
+  const Ref = useRef(null);
 
   useEffect(() => {
     setAnswer(null);
-    setCounter(30);
+    setCounter(15);
   }, [question]);
 
   useEffect(() => {
@@ -63,8 +72,17 @@ const Game: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
-  }, [counter]);
+    if (answer) {
+      setCounter(15);
+    } else {
+      const interval =
+        counter > 0 &&
+        setInterval(() => {
+          setCounter(counter - 1);
+        }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [counter, answer]);
 
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
@@ -86,6 +104,12 @@ const Game: React.FC = () => {
         connection.on("question", (message: QuestionMessage) => {
           setQuestion(message);
           setHasPlayer2Answered(false);
+        });
+        connection.on("done", (message: InformDoneMessage) => {
+          console.log("game is done");
+
+          console.log(message);
+          history.push("/result", question.gameId);
         });
       });
     }
@@ -131,6 +155,22 @@ const Game: React.FC = () => {
     }
   };
 
+  const timeIsUp = () => {
+    if (!answer) {
+      present({
+        buttons: [],
+        message: "Sorry you're out of time",
+        color: "danger",
+        cssClass: "toast-danger",
+        duration: 2000,
+      });
+      setAnswer("time is up");
+      if (!(location.state as GameProps).isPlayer1) {
+        setHasPlayer2Answered(true);
+      }
+    }
+  };
+
   return (
     <IonPage>
       {!question || !location.state ? (
@@ -144,11 +184,12 @@ const Game: React.FC = () => {
           </IonToolbar>
           <IonContent className="game-container">
             <div className="question-card-container">
-              <p className="secondary">1/10</p>
+              <p className="secondary">{question.questionNumber + 1}/10</p>
+              {/* TODO: on click show red bg if not correct, green if correct */}
               <IonCard className="question-card">
                 <p className="dark">{he.decode(question.question)}</p>
               </IonCard>
-              <small>Category:{he.decode(question.category)}</small>
+              <small>Category: {he.decode(question.category)}</small>
             </div>
             <IonList className="options-list">
               {question.answers.map((answer) => {
@@ -168,7 +209,7 @@ const Game: React.FC = () => {
 
             <div className="counter-container">
               <div className="counter">
-                <p> {counter == 0 ? "time is up" : counter}</p>
+                <p> {counter == 0 ? timeIsUp() : counter}</p>
               </div>
             </div>
           </IonContent>
