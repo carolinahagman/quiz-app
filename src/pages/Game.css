@@ -31,6 +31,10 @@ small {
   margin: 0 2rem;
 }
 
+ion-card:not(.highlighted) {
+  background-color: var(--ion-background);
+}
+
 .options-card {
   padding-left: 1rem;
   cursor: pointer;

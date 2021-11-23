@@ -135,8 +135,7 @@ const Register: React.FC = () => {
           >
             Create account
           </IonButton>
-          <div className=" flex login-container">
-            <p className="secondary"> Already have an account? </p>{" "}
+          <div className="flex login-container">
             <IonButton
               onClick={() => {
                 history.push("/login");
@@ -145,7 +144,7 @@ const Register: React.FC = () => {
               fill="clear"
               color="dark"
             >
-              <p className="button-text">Login here</p>
+              <p className="button-text">Already have an account? </p>
             </IonButton>
           </div>
         </IonCard>

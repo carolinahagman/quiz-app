@@ -18,6 +18,7 @@ import { GamesApi } from "../communication";
 import { PostAnswerRequest } from "../communication/models";
 import LoadingPage from "../components/LoadingPage";
 import he from "he";
+import { ResultProps } from "./Result";
 
 export interface GameProps {
   isPlayer1: boolean;
@@ -49,8 +50,9 @@ interface AnswerDto {
 const Game: React.FC = () => {
   const [counter, setCounter] = useState<number>(15);
   const [connection, setConnection] = useState<HubConnection>(null);
-  const [answer, setAnswer] = useState<string>(null);
+  const [playerAnswer, setPlayerAnswer] = useState<string>(null);
   const [question, setQuestion] = useState<QuestionMessage>(null);
+  const [highlighted, setHighlighted] = useState<boolean>(false);
   const [hasPlayer2Answered, setHasPlayer2Answered] = useState<boolean>(false);
   const location = useLocation();
   const history = useHistory();
@@ -59,7 +61,7 @@ const Game: React.FC = () => {
   const Ref = useRef(null);
 
   useEffect(() => {
-    setAnswer(null);
+    setPlayerAnswer(null);
     setCounter(15);
   }, [question]);
 
@@ -72,7 +74,7 @@ const Game: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (answer) {
+    if (playerAnswer) {
       setCounter(15);
     } else {
       const interval =
@@ -82,7 +84,7 @@ const Game: React.FC = () => {
         }, 1000);
       return () => clearInterval(interval);
     }
-  }, [counter, answer]);
+  }, [counter, playerAnswer]);
 
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
@@ -102,6 +104,7 @@ const Game: React.FC = () => {
           setHasPlayer2Answered(message.isReady);
         });
         connection.on("question", (message: QuestionMessage) => {
+          setHighlighted(false);
           setQuestion(message);
           setHasPlayer2Answered(false);
         });
@@ -109,18 +112,21 @@ const Game: React.FC = () => {
           console.log("game is done");
 
           console.log(message);
-          history.push("/result", question.gameId);
+          const state: ResultProps = {
+            gameId: message.gameId,
+          };
+          history.replace("/result", state);
         });
       });
     }
   }, [connection]);
 
   useEffect(() => {
-    if (answer) {
+    if (playerAnswer) {
       const postAnswerRequest: PostAnswerRequest = {
         isCorrect:
           question.answers.filter((answer) => answer.isCorrect)[0].answer ===
-          answer,
+          playerAnswer,
       };
       gameApi
         .gamesIdQuestionQuestionIdPost(
@@ -130,33 +136,36 @@ const Game: React.FC = () => {
         )
         .then(() => {});
     }
-  }, [answer]);
+  }, [playerAnswer]);
 
   useEffect(() => {
     console.log(
-      `${answer} ${
+      `${playerAnswer} ${
         (location.state as GameProps).isPlayer1
       } ${hasPlayer2Answered}`
     );
 
     if (
-      (!(location.state as GameProps).isPlayer1 && answer) ||
-      ((location.state as GameProps).isPlayer1 && answer && hasPlayer2Answered)
+      (!(location.state as GameProps).isPlayer1 && playerAnswer) ||
+      ((location.state as GameProps).isPlayer1 &&
+        playerAnswer &&
+        hasPlayer2Answered)
     ) {
       gameApi
         .gamesIdQuestionGet((location.state as GameProps).gameId)
         .then((response) => {});
     }
-  }, [answer, hasPlayer2Answered]);
+  }, [playerAnswer, hasPlayer2Answered]);
 
   const onAnswer = (clickedAnswer: string) => {
-    if (!answer) {
-      setAnswer(clickedAnswer);
+    if (!playerAnswer) {
+      setPlayerAnswer(clickedAnswer);
+      setHighlighted(true);
     }
   };
 
   const timeIsUp = () => {
-    if (!answer) {
+    if (!playerAnswer) {
       present({
         buttons: [],
         message: "Sorry you're out of time",
@@ -164,7 +173,7 @@ const Game: React.FC = () => {
         cssClass: "toast-danger",
         duration: 2000,
       });
-      setAnswer("time is up");
+      setPlayerAnswer("time is up");
       if (!(location.state as GameProps).isPlayer1) {
         setHasPlayer2Answered(true);
       }
@@ -198,7 +207,14 @@ const Game: React.FC = () => {
                     onClick={() => {
                       onAnswer(answer.answer);
                     }}
-                    className="options-card"
+                    className={`options-card ${
+                      highlighted &&
+                      (answer.isCorrect || answer.answer === playerAnswer)
+                        ? "highlighted"
+                        : ""
+                    } ${
+                      highlighted && answer.isCorrect ? "success" : "danger"
+                    }`}
                     key={answer.answer}
                   >
                     <p className="dark">{he.decode(answer.answer)}</p>

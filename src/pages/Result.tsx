@@ -19,6 +19,10 @@ import { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import LoadingPage from "../components/LoadingPage";
 
+export interface ResultProps {
+  gameId: string;
+}
+
 const Result: React.FC = () => {
   const [avatar, setAvatar] = useState<string>(defaultAvatar);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -105,13 +109,13 @@ const Result: React.FC = () => {
             </IonList>
 
             <div className="button-container">
-              <IonButton className="primary-button" onClick={playAgain}>
+              {/* <IonButton className="primary-button" onClick={playAgain}>
                 Play Again
-              </IonButton>
+              </IonButton> */}
 
               <IonButton
                 onClick={() => {
-                  history.push("/home");
+                  history.replace("/home");
                 }}
                 className="primary-button"
               >

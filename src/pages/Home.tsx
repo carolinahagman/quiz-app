@@ -103,8 +103,6 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log("IN USEFFECT");
-
     if (user && currentGame) {
       const state: ReadyCheckProps = {
         gameId: currentGame.id,
@@ -113,7 +111,7 @@ const Home: React.FC = () => {
       console.log("CURRENT GAME");
       console.log(state);
 
-      history.push("/ready-check", state);
+      history.replace("/ready-check", state);
     }
   }, [currentGame, user]);
 

@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 import { GamesApi } from "../communication";
 import { HubConnectionBuilder, HubConnection } from "@microsoft/signalr";
-import Connection from "../components/Connection";
+
 import { GameProps } from "./Game";
 import Logo from "../assets/QuizLogo.png";
 
@@ -38,7 +38,7 @@ const ReadyCheck: React.FC = () => {
 
   useEffect(() => {
     if (isReady) {
-      history.push("/game", getGameProps());
+      history.replace("/game", getGameProps());
     }
   }, [otherPlayerReady]);
 
