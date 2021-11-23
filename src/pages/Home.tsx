@@ -198,7 +198,6 @@ const Home: React.FC = () => {
       });
   }
   //TODO: get friend requests
-  //TODO: get game challenge
 
   async function startGame(username) {
     const body: PostGameRequest = {
@@ -299,11 +298,15 @@ const Home: React.FC = () => {
                 </IonCard>
               ))}
           </IonList>
-          <Link to="/settings">
-            <IonButton className="primary-button settings-button">
-              Settings
-            </IonButton>
-          </Link>
+
+          <IonButton
+            onClick={() => {
+              history.push("/settings");
+            }}
+            className="primary-button settings-button"
+          >
+            Settings
+          </IonButton>
         </IonContent>
       )}
     </IonPage>

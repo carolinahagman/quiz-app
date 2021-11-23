@@ -16,7 +16,7 @@ import confetti from "canvas-confetti";
 import defaultAvatar from "../assets/avatar/Avatar.png";
 import Logo from "../assets/QuizLogo.png";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import LoadingPage from "../components/LoadingPage";
 
 const Result: React.FC = () => {
@@ -25,13 +25,16 @@ const Result: React.FC = () => {
   const [ifCorrect, setIfCorrect] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(false);
   const [winner, setWinner] = useState<boolean>(null);
+  const history = useHistory();
 
   useEffect(() => {
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-    });
+    if (winner) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+    }
   }, []);
 
   function playAgain() {
@@ -66,7 +69,7 @@ const Result: React.FC = () => {
             <IonAvatar className="big-avatar">
               <IonImg className="avatar" src={avatar} />
             </IonAvatar>
-            <h3>You won!</h3>
+            <h3>{winner ? "You won!" : "You lost :("}</h3>
             <IonList className="result-list">
               <IonCard className="result-card flex">
                 <div className="flex">
@@ -105,9 +108,15 @@ const Result: React.FC = () => {
               <IonButton className="primary-button" onClick={playAgain}>
                 Play Again
               </IonButton>
-              <Link to="/home">
-                <IonButton className="primary-button">Home</IonButton>
-              </Link>
+
+              <IonButton
+                onClick={() => {
+                  history.push("/home");
+                }}
+                className="primary-button"
+              >
+                Home
+              </IonButton>
             </div>
           </div>
         </IonContent>

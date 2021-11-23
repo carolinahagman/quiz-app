@@ -137,11 +137,16 @@ const Register: React.FC = () => {
           </IonButton>
           <div className=" flex login-container">
             <p className="secondary"> Already have an account? </p>{" "}
-            <Link to="/login">
-              <IonButton className="login-button" fill="clear" color="dark">
-                <p className="button-text">Login here</p>
-              </IonButton>
-            </Link>
+            <IonButton
+              onClick={() => {
+                history.push("/login");
+              }}
+              className="login-button"
+              fill="clear"
+              color="dark"
+            >
+              <p className="button-text">Login here</p>
+            </IonButton>
           </div>
         </IonCard>
       </IonContent>

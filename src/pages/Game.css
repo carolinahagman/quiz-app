@@ -11,11 +11,11 @@
 }
 
 small {
-  width: 300px;
+  width: 80%;
   text-align: start;
 }
 .question-card {
-  width: 300px;
+  width: 80%;
   height: 200px;
   margin-bottom: 0.5rem;
   margin-top: 1rem;
@@ -33,6 +33,7 @@ small {
 
 .options-card {
   padding-left: 1rem;
+  cursor: pointer;
 }
 .counter-container {
   margin-top: 2rem;
