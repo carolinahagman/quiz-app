@@ -19,9 +19,8 @@ import Logo from "../assets/QuizLogo.png";
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import LoadingPage from "../components/LoadingPage";
-import { GamesApi } from "../communication";
-import { GetGameResponse } from "../communication/models";
-import { userInfo } from "os";
+import { AuthenticationApi, GamesApi, UsersApi } from "../communication";
+import { GetGameResponse, GetUserResponse } from "../communication/models";
 
 export interface ResultProps {
   gameId: string;
@@ -34,6 +33,7 @@ export interface Score {
 
 const Result: React.FC = () => {
   const [avatar, setAvatar] = useState<string>(defaultAvatar);
+  const [user, setUser] = useState<GetUserResponse>(null);
   const [gameResult, setGameResult] = useState<GetGameResponse>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(false);
@@ -42,6 +42,7 @@ const Result: React.FC = () => {
   const [present] = useIonToast();
   const history = useHistory();
   const location = useLocation();
+  const usersApi = new UsersApi();
   const gameApi = new GamesApi();
 
   useEffect(() => {
@@ -49,13 +50,19 @@ const Result: React.FC = () => {
       setIsLoading(false);
       getWinner();
     }
-  }, [gameResult]);
+  }, [gameResult, user]);
+
+  useEffect(() => {
+    usersApi.usersGet().then((response) => {
+      setUser(response.data);
+      console.log(response.data);
+    });
+  }, []);
 
   useEffect(() => {
     gameApi
       .gamesIdGet((location.state as ResultProps).gameId)
       .then((response) => {
-        console.log(response.data);
         setGameResult(response.data);
       })
       .catch(() => {
@@ -71,14 +78,16 @@ const Result: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (winner && !isLoading) {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
+    if (winner && user && !isLoading) {
+      if (winner === user.username) {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+      }
     }
-  }, []);
+  }, [winner, isLoading]);
 
   function playAgain() {
     console.log("play again");
@@ -102,8 +111,6 @@ const Result: React.FC = () => {
     gameResult.user2Result.forEach((answer) => {
       if (answer.correctAnswer) user2Score++;
     });
-
-    console.log(`WINNER ${user1Score} ${user2Score}`);
 
     if (user1Score === user2Score) {
       setWinner(null);
@@ -203,12 +210,7 @@ const Result: React.FC = () => {
                 ))}
               </div>
             </IonList>
-
             <div className="button-container">
-              {/* <IonButton className="primary-button" onClick={playAgain}>
-                Play Again
-              </IonButton> */}
-
               <IonButton
                 onClick={() => {
                   history.replace("/home");
