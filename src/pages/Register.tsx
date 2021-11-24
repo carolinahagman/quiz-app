@@ -10,7 +10,7 @@ import {
   useIonToast,
 } from "@ionic/react";
 import { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import "./global.css";
 import "./Register.css";
 import LogoContainer from "../components/Logocontainer";
@@ -23,7 +23,7 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [present, dismiss] = useIonToast();
+  const [present] = useIonToast();
   const history = useHistory();
 
   function createUser() {
@@ -88,7 +88,7 @@ const Register: React.FC = () => {
       <IonHeader className="ion-no-border">
         <LogoContainer />
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent scrollY={false} fullscreen>
         <IonCard className="form">
           <IonItem lines="none">
             <IonLabel color="secondary" position="floating">

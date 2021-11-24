@@ -17,7 +17,7 @@ import { Link, useHistory } from "react-router-dom";
 import "./global.css";
 import "./Settings.css";
 import { UsersApi } from "../communication";
-import { PostUserRequest, PutUserRequest } from "../communication/models";
+import { GetUserResponse, PutUserRequest } from "../communication/models";
 import Logo from "../assets/QuizLogo.png";
 import defaultAvatar from "../assets/avatar/Avatar.png";
 import LoadingPage from "../components/LoadingPage";
@@ -25,7 +25,7 @@ import LoadingPage from "../components/LoadingPage";
 const Settings: React.FC = () => {
   const usersApi = new UsersApi();
   const history = useHistory();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<GetUserResponse>(null);
   const [email, setEmail] = useState<string>("email@email.com");
   const [avatar, setAvatar] = useState<string>(defaultAvatar);
   const [oldPassword, setOldPassword] = useState<string>(null);

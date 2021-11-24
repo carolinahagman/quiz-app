@@ -1,11 +1,5 @@
 import { Redirect, Route } from "react-router-dom";
-import {
-  IonApp,
-  IonRouterOutlet,
-  useIonViewDidEnter,
-  useIonViewWillEnter,
-  withIonLifeCycle,
-} from "@ionic/react";
+import { IonApp, IonRouterOutlet } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -32,10 +26,7 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import { useState } from "react";
 import React from "react";
-import axios from "axios";
-import { BASE_PATH } from "./communication/base";
 import ReadyCheck from "./pages/ReadyCheck";
 
 class App extends React.Component<{}, {}> {

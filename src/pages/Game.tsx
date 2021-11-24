@@ -12,7 +12,7 @@ import "./global.css";
 import "./Game.css";
 import { HubConnectionBuilder, HubConnection } from "@microsoft/signalr";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
 import { GamesApi } from "../communication";
 import { PostAnswerRequest } from "../communication/models";
@@ -57,8 +57,7 @@ const Game: React.FC = () => {
   const location = useLocation();
   const history = useHistory();
   const gameApi = new GamesApi();
-  const [present, dismiss] = useIonToast();
-  const Ref = useRef(null);
+  const [present] = useIonToast();
 
   useEffect(() => {
     setPlayerAnswer(null);

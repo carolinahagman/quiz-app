@@ -9,11 +9,9 @@ import {
   IonCard,
   useIonToast,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
-import { Redirect } from "react-router";
-import { Link } from "react-router-dom";
-import axios, { Axios } from "axios";
-import { registerRoute } from "workbox-routing";
+import { useState } from "react";
+
+import axios from "axios";
 import LogoContainer from "../components/Logocontainer";
 import "./global.css";
 import "./Login.css";
@@ -62,7 +60,7 @@ const Login: React.FC = () => {
       <IonHeader className="ion-no-border">
         <LogoContainer />
       </IonHeader>
-      <IonContent fullscreen>
+      <IonContent scrollY={false} fullscreen>
         <IonCard className="form ">
           <IonItem lines="none">
             <IonLabel position="floating" color="secondary">

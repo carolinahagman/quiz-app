@@ -34,7 +34,6 @@ import LoadingPage from "../components/LoadingPage";
 import "./Home.css";
 import "./global.css";
 import { useHistory, useLocation } from "react-router";
-import { Link } from "react-router-dom";
 import { ReadyCheckProps } from "./ReadyCheck";
 import { closeOutline } from "ionicons/icons";
 import { HubConnectionBuilder, HubConnection } from "@microsoft/signalr";
@@ -60,7 +59,6 @@ const Home: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [present] = useIonToast();
   const [alert] = useIonAlert();
-
   const [currentGame, setCurrentGame] = useState<PostGameResponse>(null);
   const [addFriendSearch, setAddFriendSearch] = useState<string>("");
   const [friendSearchResults, setFriendSearchResults] = useState<FriendModel[]>(
@@ -81,14 +79,8 @@ const Home: React.FC = () => {
   }, []);
   useEffect(() => {
     if (connection) {
-      connection.start().then((result) => {
-        console.log("Connected to web sockets");
+      connection.start().then(() => {
         connection.on("startGame", (message: StartGameMessage) => {
-          console.log("START GAME");
-          // const state: ReadyCheckProps = {
-          //   gameId: message.gameId,
-          //   isPlayer1: message.player1.username === user.username,
-          // };
           const game: PostGameResponse = {
             id: message.gameId,
             isDone: false,
@@ -96,8 +88,6 @@ const Home: React.FC = () => {
             user2: message.player2,
           };
           setCurrentGame(game);
-          console.log(game);
-          console.log("STARTED GAME");
         });
       });
     }
@@ -115,8 +105,7 @@ const Home: React.FC = () => {
         gameId: currentGame.id,
         isPlayer1: currentGame.user1.username === user.username,
       };
-      console.log("CURRENT GAME");
-      console.log(state);
+
       history.replace("/ready-check", state);
     }
   }, [currentGame, user]);
@@ -230,7 +219,7 @@ const Home: React.FC = () => {
           role: "delete",
           cssClass: "delete-alert",
           handler: () => {
-            contactsApi.contactsUsernameDelete(username).then((response) => {
+            contactsApi.contactsUsernameDelete(username).then(() => {
               const updatedFriends = friends.filter(
                 (friend) => friend.username !== username
               );
