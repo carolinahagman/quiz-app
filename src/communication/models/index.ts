@@ -13,3 +13,4 @@ export * from "./post-user-request";
 export * from "./post-user-response";
 export * from "./put-user-request";
 export * from "./post-answer-request";
+export * from "./get-game-response";

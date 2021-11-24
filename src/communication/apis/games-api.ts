@@ -17,6 +17,7 @@ import { Configuration } from '../configuration';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 import { GeneralDto } from '../models';
+import { GetGameResponse } from '../models';
 import { PostAnswerRequest } from '../models';
 import { PostGameRequest } from '../models';
 import { PostGameResponse } from '../models';
@@ -28,6 +29,7 @@ export const GamesApiAxiosParamCreator = function (configuration?: Configuration
     return {
         /**
          * 
+         * @summary Get information that game is done
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -61,6 +63,47 @@ export const GamesApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
+         * @summary Get game result by game id
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        gamesIdGet: async (id: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling gamesIdGet.');
+            }
+            const localVarPath = `/Games/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                query.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Set ready status by id
          * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -100,6 +143,7 @@ export const GamesApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
+         * @summary Get questions by game id
          * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -236,6 +280,7 @@ export const GamesApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @summary Get information that game is done
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -248,6 +293,21 @@ export const GamesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get game result by game id
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async gamesIdGet(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetGameResponse>> {
+            const localVarAxiosArgs = await GamesApiAxiosParamCreator(configuration).gamesIdGet(id, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Set ready status by id
          * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -261,6 +321,7 @@ export const GamesApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get questions by game id
          * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -311,6 +372,7 @@ export const GamesApiFactory = function (configuration?: Configuration, basePath
     return {
         /**
          * 
+         * @summary Get information that game is done
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -319,6 +381,17 @@ export const GamesApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
+         * @summary Get game result by game id
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        gamesIdGet(id: string, options?: any): AxiosPromise<GetGameResponse> {
+            return GamesApiFp(configuration).gamesIdGet(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Set ready status by id
          * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -328,6 +401,7 @@ export const GamesApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
+         * @summary Get questions by game id
          * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -367,6 +441,7 @@ export const GamesApiFactory = function (configuration?: Configuration, basePath
 export class GamesApi extends BaseAPI {
     /**
      * 
+     * @summary Get information that game is done
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GamesApi
@@ -376,6 +451,18 @@ export class GamesApi extends BaseAPI {
     }
     /**
      * 
+     * @summary Get game result by game id
+     * @param {string} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GamesApi
+     */
+    public gamesIdGet(id: string, options?: any) {
+        return GamesApiFp(this.configuration).gamesIdGet(id, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @summary Set ready status by id
      * @param {string} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -386,6 +473,7 @@ export class GamesApi extends BaseAPI {
     }
     /**
      * 
+     * @summary Get questions by game id
      * @param {string} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}

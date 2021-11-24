@@ -9,6 +9,7 @@ import {
   IonList,
   IonPage,
   IonToolbar,
+  useIonToast,
 } from "@ionic/react";
 import "./global.css";
 import "./Result.css";
@@ -16,27 +17,61 @@ import confetti from "canvas-confetti";
 import defaultAvatar from "../assets/avatar/Avatar.png";
 import Logo from "../assets/QuizLogo.png";
 import { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import LoadingPage from "../components/LoadingPage";
 import { GamesApi } from "../communication";
+import { GetGameResponse } from "../communication/models";
+import { userInfo } from "os";
 
 export interface ResultProps {
   gameId: string;
 }
 
+export interface Score {
+  user1Score: number;
+  user2Score: number;
+}
+
 const Result: React.FC = () => {
   const [avatar, setAvatar] = useState<string>(defaultAvatar);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [ifCorrect, setIfCorrect] = useState<boolean>(true);
+  const [gameResult, setGameResult] = useState<GetGameResponse>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [visible, setVisible] = useState<boolean>(false);
-  const [winner, setWinner] = useState<boolean>(null);
+  const [winner, setWinner] = useState<string>(null);
+  const [score, setScore] = useState<Score>(null);
+  const [present] = useIonToast();
   const history = useHistory();
+  const location = useLocation();
   const gameApi = new GamesApi();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (gameResult) {
+      setIsLoading(false);
+      getWinner();
+    }
+  }, [gameResult]);
 
   useEffect(() => {
-    if (winner) {
+    gameApi
+      .gamesIdGet((location.state as ResultProps).gameId)
+      .then((response) => {
+        console.log(response.data);
+        setGameResult(response.data);
+      })
+      .catch(() => {
+        present({
+          buttons: [],
+          message: "Couldn't find the game result",
+          color: "danger",
+          cssClass: "toast-danger",
+          duration: 2000,
+        });
+        history.push("/home");
+      });
+  }, []);
+
+  useEffect(() => {
+    if (winner && !isLoading) {
       confetti({
         particleCount: 100,
         spread: 70,
@@ -56,6 +91,35 @@ const Result: React.FC = () => {
       setVisible(true);
     }
   }
+
+  const getWinner = (): void => {
+    let user1Score: number = 0;
+    let user2Score: number = 0;
+
+    gameResult.user1Result.forEach((answer) => {
+      if (answer.correctAnswer) user1Score++;
+    });
+    gameResult.user2Result.forEach((answer) => {
+      if (answer.correctAnswer) user2Score++;
+    });
+
+    console.log(`WINNER ${user1Score} ${user2Score}`);
+
+    if (user1Score === user2Score) {
+      setWinner(null);
+    }
+    if (user1Score > user2Score) {
+      setWinner(gameResult.user1.username);
+    }
+
+    if (user2Score > user1Score) {
+      setWinner(gameResult.user2.username);
+    }
+    setScore({
+      user1Score,
+      user2Score,
+    });
+  };
 
   return (
     <IonPage>
@@ -77,17 +141,17 @@ const Result: React.FC = () => {
             <IonAvatar className="big-avatar">
               <IonImg className="avatar" src={avatar} />
             </IonAvatar>
-            <h3>{winner ? "You won!" : "You lost :("}</h3>
+            <h3>{winner ? `${winner} won this match!` : "Tied!"}</h3>
             <IonList className="result-list">
               <IonCard className="result-card flex">
                 <div className="flex">
                   <IonAvatar className="small-avatar">
-                    <IonImg className="avatar" src={defaultAvatar} />
+                    <IonImg className="avatar" src={avatar} />
                   </IonAvatar>
-                  <p className="secondary">username</p>
+                  <p className="secondary">{gameResult.user1.username}</p>
                 </div>
                 <IonButton onClick={openResult} fill="clear" color="dark">
-                  10/10
+                  {score.user1Score}/10
                 </IonButton>
               </IonCard>
               <div
@@ -97,18 +161,46 @@ const Result: React.FC = () => {
                     : "question-result-container hidden"
                 }
               >
-                <div className={ifCorrect ? "success box" : "danger box"}>
-                  1
+                {gameResult.user1Result.map((user1answer) => (
+                  <div
+                    key={user1answer.questionNumber}
+                    className={
+                      user1answer.correctAnswer ? "success box" : "danger box"
+                    }
+                  >
+                    {user1answer.questionNumber + 1}
+                  </div>
+                ))}
+              </div>
+
+              <IonCard className="result-card flex">
+                <div className="flex">
+                  <IonAvatar className="small-avatar">
+                    <IonImg className="avatar" src={avatar} />
+                  </IonAvatar>
+                  <p className="secondary">{gameResult.user2.username}</p>
                 </div>
-                <div className="box success">2</div>
-                <div className="box success">3</div>
-                <div className="box success">4</div>
-                <div className="box success">5</div>
-                <div className="box success">6</div>
-                <div className="box success">7</div>
-                <div className="box success">8</div>
-                <div className="box success">9</div>
-                <div className="box success">10</div>
+                <IonButton onClick={openResult} fill="clear" color="dark">
+                  {score.user2Score}/10
+                </IonButton>
+              </IonCard>
+              <div
+                className={
+                  visible
+                    ? "question-result-container visible"
+                    : "question-result-container hidden"
+                }
+              >
+                {gameResult.user2Result.map((user2answer) => (
+                  <div
+                    key={user2answer.questionNumber}
+                    className={
+                      user2answer.correctAnswer ? "success box" : "danger box"
+                    }
+                  >
+                    {user2answer.questionNumber + 1}
+                  </div>
+                ))}
               </div>
             </IonList>
 

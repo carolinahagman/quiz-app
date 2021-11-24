@@ -78,6 +78,7 @@ const Game: React.FC = () => {
     } else {
       const interval =
         counter > 0 &&
+        (!question || question.questionNumber < 10) &&
         setInterval(() => {
           setCounter(counter - 1);
         }, 1000);
@@ -108,9 +109,6 @@ const Game: React.FC = () => {
           setHasPlayer2Answered(false);
         });
         connection.on("done", (message: InformDoneMessage) => {
-          console.log("game is done");
-
-          console.log(message);
           const state: ResultProps = {
             gameId: message.gameId,
           };
@@ -193,7 +191,7 @@ const Game: React.FC = () => {
           <IonContent className="game-container">
             <div className="question-card-container">
               <p className="secondary">{question.questionNumber + 1}/10</p>
-              {/* TODO: on click show red bg if not correct, green if correct */}
+
               <IonCard className="question-card">
                 <p className="dark">{he.decode(question.question)}</p>
               </IonCard>
