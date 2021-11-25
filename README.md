@@ -22,6 +22,6 @@ $ git clone https://github.com/carolinahagman/quiz-app.git
 
 type `npm install` followed by `ionic serve`
 
-Make sure you've already installed the [Server side repo](https://github.com/carolinahagman/quiz-app-BE)
+Make sure you've already installed the [server side repo](https://github.com/carolinahagman/quiz-app-BE)
  
 Now it's time to challenge someone in a Quiz game
