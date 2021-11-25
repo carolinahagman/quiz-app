@@ -1,4 +1,4 @@
-<img src="https://imgur.com/o9aewCw" width="100%">
+<img src="https://i.imgur.com/o9aewCw.png" width="full">
 
 # Client side Quiz App
 
