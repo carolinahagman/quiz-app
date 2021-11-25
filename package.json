@@ -69,7 +69,8 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "3.2.5"
+    "@capacitor/cli": "3.2.5",
+    "@ionic/cli": "^6.18.1"
   },
   "description": "Quiz app with question from openTriviaDb"
 }
