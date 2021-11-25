@@ -9,6 +9,7 @@ a major degree project
 - React
 - Typescript
 - Ionic Framework
+- SignalR
 
 
 ## Installation
