@@ -61,6 +61,8 @@ const Home: React.FC = () => {
   const [alert] = useIonAlert();
   const [currentGame, setCurrentGame] = useState<PostGameResponse>(null);
   const [addFriendSearch, setAddFriendSearch] = useState<string>("");
+  const [friendReq, setFriendReq] = useState<FriendModel[]>([]);
+  const [friendUserName, setFriendUserName] = useState<string>("");
   const [friendSearchResults, setFriendSearchResults] = useState<FriendModel[]>(
     []
   );
@@ -142,7 +144,22 @@ const Home: React.FC = () => {
         });
       });
 
-    Promise.all([getUserRequest, getFriendsRequest]).finally(() => {
+    const getNewFriendRequest = contactsApi
+      .contactsFriendRequestsGet()
+      .then((response) => {
+        console.log(response.data);
+        setFriendReq(response.data);
+        if (response.data[0].username) {
+          setFriendUserName(response.data[0].username);
+        }
+      })
+      .catch((error) => {});
+
+    Promise.all([
+      getUserRequest,
+      getFriendsRequest,
+      getNewFriendRequest,
+    ]).finally(() => {
       setIsLoading(false);
     });
   }, []);
@@ -178,7 +195,7 @@ const Home: React.FC = () => {
       .then(() => {
         present({
           buttons: [],
-          message: "Friend request sent!",
+          message: "Friend added",
           color: "success",
           cssClass: "toast-success",
           duration: 2000,
@@ -201,13 +218,42 @@ const Home: React.FC = () => {
         });
       });
   };
-  //TODO: get friend requests
-  // useEffect(() => {
-  //   contactsApi.contactsFriendRequestsGet().then((response) => {
 
-  //   });
-  // }, [friends]);
-
+  useEffect(() => {
+    {
+      if (friendUserName) {
+        alert({
+          cssClass: "delete-alert",
+          header: "Add friend",
+          message: `Add ${friendUserName} to your friends`,
+          buttons: [
+            {
+              text: "Cancel",
+              role: "delete",
+              cssClass: "delete-alert",
+              handler: () => {
+                //TODO: remove frinedship
+                // contactsApi.contactsUsernameDelete(friendUserName).then(() => {
+                //   const updatedFriends = friends.filter(
+                //     (friend) => friend.username !== friendUserName
+                //   );
+                //   setFriends(updatedFriends);
+                // });
+              },
+            },
+            {
+              text: "Add",
+              role: "add",
+              cssClass: "delete-alert",
+              handler: () => {
+                sendFriendRequest(friendReq[0]);
+              },
+            },
+          ],
+        });
+      }
+    }
+  }, [friendUserName]);
   const removeFriend = (username) => {
     alert({
       cssClass: "delete-alert",
