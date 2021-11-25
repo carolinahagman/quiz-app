@@ -28,22 +28,16 @@ const Login: React.FC = () => {
   const [present, dismiss] = useIonToast();
   const history = useHistory();
 
-  // useEffect(() => {
-  //   checkIfLoggedIn().then(() => {
-  //     history.push("/home");
-  //   });
-  // }, []);
-
-  function loginUser() {
+  const loginUser = () => {
     const body: PostLoginRequest = {
       username,
       password,
     };
     api.authenticationLoginPost(body).then(
-      (response) => {
+      () => {
         history.push("/home");
       },
-      (error) => {
+      () => {
         present({
           buttons: [],
           message: "Login failed, wrong username or password",
@@ -53,7 +47,7 @@ const Login: React.FC = () => {
         });
       }
     );
-  }
+  };
 
   return (
     <IonPage>
@@ -104,14 +98,5 @@ const Login: React.FC = () => {
     </IonPage>
   );
 };
-
-export async function checkIfLoggedIn(): Promise<boolean> {
-  try {
-    await axios.get(`${BASE_PATH}/Authentication`);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
 
 export default Login;

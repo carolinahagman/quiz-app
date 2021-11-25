@@ -136,12 +136,6 @@ const Game: React.FC = () => {
   }, [playerAnswer]);
 
   useEffect(() => {
-    console.log(
-      `${playerAnswer} ${
-        (location.state as GameProps).isPlayer1
-      } ${hasPlayer2Answered}`
-    );
-
     if (
       (!(location.state as GameProps).isPlayer1 && playerAnswer) ||
       ((location.state as GameProps).isPlayer1 &&

@@ -145,10 +145,14 @@ const Result: React.FC = () => {
           </IonHeader>
 
           <div className="result-container">
-            <IonAvatar className="big-avatar">
+            {/* <IonAvatar className="big-avatar">
               <IonImg className="avatar" src={avatar} />
-            </IonAvatar>
-            <h3>{winner ? `${winner} won this match!` : "Tied!"}</h3>
+            </IonAvatar> */}
+            <h3>
+              {winner
+                ? `${winner === user.username ? "you" : winner} won this match!`
+                : "Tied!"}
+            </h3>
             <IonList className="result-list">
               <IonCard className="result-card flex">
                 <div className="flex">

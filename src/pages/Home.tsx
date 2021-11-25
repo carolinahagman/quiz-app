@@ -153,7 +153,7 @@ const Home: React.FC = () => {
     });
   }, [addFriendSearch]);
 
-  function logoutUser() {
+  const logoutUser = () => {
     authApi.authenticationLogoutPost().then(() => {
       present({
         buttons: [],
@@ -166,9 +166,9 @@ const Home: React.FC = () => {
       history.push({ pathname: "/empty" });
       history.replace({ pathname: "/login" });
     });
-  }
+  };
 
-  function sendFriendRequest(friend: FriendModel) {
+  const sendFriendRequest = (friend: FriendModel) => {
     setAddFriendSearch("");
     const body: PostFriendRequest = {
       username: friend.username,
@@ -200,7 +200,7 @@ const Home: React.FC = () => {
           duration: 2000,
         });
       });
-  }
+  };
   //TODO: get friend requests
   // useEffect(() => {
   //   contactsApi.contactsFriendRequestsGet().then((response) => {
@@ -236,7 +236,7 @@ const Home: React.FC = () => {
     });
   };
 
-  async function startGame(username) {
+  const startGame = async (username) => {
     const body: PostGameRequest = {
       username,
     };
@@ -246,7 +246,7 @@ const Home: React.FC = () => {
         setCurrentGame(response.data);
       })
       .catch(() => {});
-  }
+  };
 
   return (
     <IonPage>

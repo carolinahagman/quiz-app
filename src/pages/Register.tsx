@@ -26,7 +26,7 @@ const Register: React.FC = () => {
   const [present] = useIonToast();
   const history = useHistory();
 
-  function createUser() {
+  const createUser = () => {
     if (password.length < 6) {
       present({
         buttons: [],
@@ -60,7 +60,6 @@ const Register: React.FC = () => {
       return;
     }
 
-    console.log(username, email, password, confirmPassword);
     const body: PostUserRequest = {
       username,
       email,
@@ -81,7 +80,7 @@ const Register: React.FC = () => {
         });
       }
     );
-  }
+  };
 
   return (
     <IonPage>

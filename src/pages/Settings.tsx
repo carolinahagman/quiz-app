@@ -43,7 +43,7 @@ const Settings: React.FC = () => {
     });
   }, []);
 
-  function updateUser() {
+  const updateUser = () => {
     if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
       present({
         buttons: [],
@@ -97,9 +97,9 @@ const Settings: React.FC = () => {
           duration: 2000,
         });
       });
-  }
+  };
 
-  function deleteUser() {
+  const deleteUser = () => {
     alert({
       cssClass: "delete-alert",
       header: "DELETE",
@@ -130,7 +130,7 @@ const Settings: React.FC = () => {
         },
       ],
     });
-  }
+  };
   return (
     <IonPage className="flex-start">
       <IonToolbar color="background">
