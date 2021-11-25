@@ -71,5 +71,5 @@
   "devDependencies": {
     "@capacitor/cli": "3.2.5"
   },
-  "description": "An Ionic project"
+  "description": "Quiz app with question from openTriviaDb"
 }
