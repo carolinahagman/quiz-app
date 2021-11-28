@@ -11,17 +11,4 @@ My major degree project, a fullstack quiz app built with React and C#. The goal 
 - Ionic Framework
 - SignalR
 
-
-## Installation
-Clone the repository to your computer
-
-```
-$ git clone https://github.com/carolinahagman/quiz-app.git
-```
-`cd` into the project folder.
-
-type `npm install` followed by `ionic serve`
-
-Make sure you've already installed the [server side repo](https://github.com/carolinahagman/quiz-app-BE)
- 
-Now it's time to challenge someone in a Quiz game
+[server side repo](https://github.com/carolinahagman/quiz-app-BE)
